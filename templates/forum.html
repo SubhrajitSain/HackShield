@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Secure Forum</h2>
+    <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#postModal">
+        <i class="bi bi-plus-lg"></i> New Post
+    </button>
+</div>
+
+<div class="list-group">
+    {% for post in posts %}
+    <div class="list-group-item list-group-item-action flex-column align-items-start border-success mb-2">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">
+                {% if post.category == 'exploit' %}<span class="badge bg-danger">Exploit</span>
+                {% elif post.category == 'phish_url' %}<span class="badge bg-warning text-dark">Phishing URL</span>
+                {% else %}<span class="badge bg-info">Discussion</span>{% endif %}
+                {{ post.title }}
+            </h5>
+            <small>{{ post.timestamp.strftime('%Y-%m-%d') }}</small>
+        </div>
+        <p class="mb-1 text-break font-monospace bg-body-tertiary p-2 rounded">{{ post.content }}</p>
+        <small class="text-muted">Posted by: {{ post.author.username }}</small>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="modal fade" id="postModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Share Intelligence</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <p class="small text-warning"><i class="bi bi-robot"></i> AI powered reviewing is active. Malicious intent without context will be rejected.</p>
+                    <input type="text" name="title" class="form-control mb-2" placeholder="Title" required>
+                    <select name="category" class="form-select mb-2">
+                        <option value="discussion">General Discussion</option>
+                        <option value="exploit">Vulnerability / Exploit</option>
+                        <option value="phish_url">Phishing URL List</option>
+                        <option value="script">Security Script</option>
+                    </select>
+                    <textarea name="content" class="form-control" rows="5" placeholder="Content/Code..." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
