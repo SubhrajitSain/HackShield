@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <h2>Cyber Security News</h2>
+        <hr>
+        <article class="mb-4">
+            <h4><a href="#" class="text-decoration-none text-reset">Freshly baked!</a></h4>
+            <p class="text-muted">Posted today</p>
+            <p>HackSheild is now up and running!</p>
+        </article>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card border-info mb-3">
+            <div class="card-header">[UNDER WORK] Subscribe to Intelligence</div>
+            <div class="card-body">
+                <p class="card-text">Get weekly exploits and news delivered to your inbox.</p>
+                <form method="POST">
+                    <div class="input-group">
+                        <input type="email" name="email" class="form-control" placeholder="expert@example.com" required>
+                        <button class="btn btn-info">Toggle On</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
