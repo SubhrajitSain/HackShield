@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card h-100" style="min-height: 70vh;">
+            <div class="card-header bg-dark text-success border-success">
+                <i class="bi bi-robot"></i> HS-007
+            </div>
+            <div class="card-body d-flex flex-column">
+                <div id="chat-box" class="flex-grow-1 overflow-auto mb-3" style="max-height: 500px;">
+                    <div class="text-center text-muted small mt-5">
+                        Ask HS-007 about ethical hacking, defense, or analyze scripts.
+                    </div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="user-input" class="form-control border-success" placeholder="Ask HS-007...">
+                    <button class="btn btn-success" id="send-btn">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    const chatBox = document.getElementById('chat-box');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    function appendMessage(sender, text) {
+        const div = document.createElement('div');
+        div.className = `p-2 my-2 rounded w-75 ${sender === 'User' ? 'bg-secondary ms-auto text-white' : 'bg-success-subtle me-auto'}`;
+        div.innerHTML = `<strong>${sender}:</strong> ${text}`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const text = userInput.value;
+        if (!text) return;
+        
+        appendMessage('User', text);
+        userInput.value = '';
+        
+        try {
+            const res = await fetch('/chat_api', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: text})
+            });
+            const data = await res.json();
+            appendMessage('HS-007', data.response);
+        } catch (e) {
+            appendMessage('System', 'Error connecting to server.');
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendMessage(); });
+</script>
+{% endblock %}
+{% endblock %}
