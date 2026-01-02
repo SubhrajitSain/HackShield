@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card bg-dark border-success shadow-lg mt-5">
+            <div class="card-header border-success bg-transparent text-center py-3">
+                <h2 class="h4 mb-0" style="color: #00ff41; font-family: 'Courier New', monospace;">&gt; Login</h2>
+                <small class="text-secondary text-uppercase tracking-widest">Let's Shield 'em All.</small>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label small text-uppercase">Email</label>
+                        <input type="email" name="email" class="form-control bg-transparent border-secondary text-white" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-uppercase">Password</label>
+                        <input type="password" name="password" class="form-control bg-transparent border-secondary text-white" required>
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success fw-bold text-dark">Login</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer border-success bg-transparent text-center py-3">
+                <p class="small mb-0 text-secondary">New user? <a href="{{ url_for('register') }}" class="text-success text-decoration-none">Create an account!</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
