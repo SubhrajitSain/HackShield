@@ -142,9 +142,13 @@ def login():
         user = User.query.filter_by(email=email).first()
         
         if user and check_password_hash(user.password, password):
+            if not user.is_verified:
+                flash('Please verify your email before logging in.', 'warning')
+                return redirect(url_for('login'))
+            
             login_user(user)
             return redirect(url_for('dashboard'))
-        flash('Login failed. Check your details.', 'danger')
+        flash('Invalid credentials.', 'danger')
     return render_template('login.html')
 
 @app.route('/logout')
@@ -254,3 +258,4 @@ with app.app_context():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
