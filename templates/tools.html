@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Cyber Tools</h2>
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">Password Generator</div>
+            <div class="card-body">
+                <form method="POST">
+                    <input type="hidden" name="gen_pwd" value="1">
+                    <label>Length</label>
+                    <input type="number" name="length" class="form-control mb-2" value="16">
+                    <button type="submit" class="btn btn-primary w-100">Generate</button>
+                </form>
+                {% if pwd_result %}
+                    <div class="mt-3 p-2 bg-body-secondary border rounded text-center">
+                        <code>{{ pwd_result }}</code>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">Encryption / Decryption (Fernet)</div>
+            <div class="card-body">
+                <ul class="nav nav-tabs" id="encTab" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#enc">Encrypt</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#dec">Decrypt</button></li>
+                </ul>
+                
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="enc">
+                        <form method="POST">
+                            <input type="hidden" name="encrypt" value="1">
+                            <textarea name="text_to_enc" class="form-control mb-2" placeholder="Text to encrypt"></textarea>
+                            <button class="btn btn-success w-100">Encrypt</button>
+                        </form>
+                        {% if enc_result %}
+                            <div class="mt-2">
+                                <small>Key (Save this!):</small><br>
+                                <code class="text-danger">{{ enc_result.key }}</code><br>
+                                <small>Result:</small><br>
+                                <code class="text-success">{{ enc_result.text }}</code>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane fade" id="dec">
+                        <form method="POST">
+                            <input type="hidden" name="decrypt" value="1">
+                            <textarea name="text_to_dec" class="form-control mb-2" placeholder="Encrypted string"></textarea>
+                            <input type="text" name="dec_key" class="form-control mb-2" placeholder="Decryption Key">
+                            <button class="btn btn-warning w-100">Decrypt</button>
+                        </form>
+                        {% if dec_result %}
+                            <div class="mt-2 p-2 bg-body-secondary">{{ dec_result }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
