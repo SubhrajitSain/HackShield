@@ -194,27 +194,27 @@ def tools():
                 dec_result = "Decryption Failed: Invalid Key or Token"
 
     return render_template('tools.html', pwd_result=pwd_result, enc_result=enc_result, dec_result=dec_result)
-
-@app.route('/forum', methods=['GET', 'POST'])
+@app.route('/forum', methods=['POST'])
 @login_required
-def forum():
-    if request.method == 'POST':
-        title = request.form.get('title')
-        content = request.form.get('content')
-        category = request.form.get('category')
-        
-        # Groq Safety Check
-        safety = groq_verify_content(content)
-        if safety.get('result') == 'unsafe':
-            flash('Post rejected: Content got flagged as malicious.', 'danger')
-        else:
-            new_post = Post(title=title, content=content, category=category, author=current_user)
-            db.session.add(new_post)
-            db.session.commit()
-            flash('Post shared successfully, no content policy violations detected.', 'success')
-            
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('forum.html', posts=posts)
+def post_to_forum():
+    content = request.form.get('content')
+    
+    check = groq_verify_content(content)
+    
+    if check['result'] == 'safe':
+        new_post = Post(
+            title=request.form.get('title'),
+            content=content,
+            category=request.form.get('category'),
+            user_id=current_user.id
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        return jsonify({"status": "success", "message": "Post uploaded."})
+    elif check['result'] == 'unsure':
+        return jsonify({"status": "error", "message": "Content flagged for manual review."}), 403
+    else:
+        return jsonify({"status": "error", "message": "Submission blocked: Malicious payload detected."}), 403
 
 @app.route('/news', methods=['GET', 'POST'])
 def news():
@@ -258,4 +258,5 @@ with app.app_context():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
